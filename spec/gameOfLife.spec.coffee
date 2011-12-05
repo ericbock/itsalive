@@ -45,5 +45,13 @@ describe "Cell", ->
 			cell.live()
 
 		describe "with fewer than two neighbors", ->
-			it "is doomed to die", ->
-				cell.isDoomed(i).should.be.true for i in [0...2]
+			it "is doomed to die from under-population", ->
+				cell.willLive(i).should.be.false for i in [0...2]
+
+		describe "with two or three neighbors", ->
+			it "will survive", ->
+				cell.willLive(i).should.be.true for i in [2..3]
+
+		describe "with more than three neighbors", ->
+			it "is doomed to die from over-population", ->
+				cell.willLive(i).should.be.false for i in [4..8]
