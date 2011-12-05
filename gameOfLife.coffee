@@ -6,4 +6,18 @@ class Game
 	addCell: (cell) ->
 		@cells.length++
 
+class Cell
+	constructor: (@X, @Y) ->
+	isAlive: true
+
+	die: () ->
+		@isAlive = false
+
+	live: () ->
+		@isAlive = true
+
+	isDoomed: (neighbors) ->
+		true
+
 root.Game = Game
+root.Cell = Cell
