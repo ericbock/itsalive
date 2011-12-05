@@ -17,7 +17,7 @@ class Cell
 		@isAlive = true
 
 	willLive: (neighbors) ->
-		neighbors in [2, 3]
+		if @isAlive then neighbors in [2, 3] else neighbors is 3
 
 root.Game = Game
 root.Cell = Cell

@@ -17,7 +17,7 @@ describe "Conway's Game of Life", ->
 		game.addCell(cell)
 		game.cells.should.have.length 1
 
-describe "Cell", ->
+describe "A Cell", ->
 	cell = {}
 
 	beforeEach ->
@@ -55,3 +55,16 @@ describe "Cell", ->
 		describe "with more than three neighbors", ->
 			it "is doomed to die from over-population", ->
 				cell.willLive(i).should.be.false for i in [4..8]
+
+	describe "when dead", ->
+
+		beforeEach ->
+			cell.die()
+
+		describe "with exactly three neighbors", ->
+			it "will come to life", ->
+				cell.willLive(3).should.be.true
+
+		describe "with some number of neighbors other than three", ->
+			it "will stay dead", ->
+				cell.willLive(i).should.be.false for i in [0..2].concat([4..8])
