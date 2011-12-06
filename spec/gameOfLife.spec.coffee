@@ -21,11 +21,7 @@ describe "A Cell", ->
 	cell = {}
 
 	beforeEach ->
-		cell = new alive.Cell 1, 2
-
-	it "should expose its coordinates", ->
-		cell.should.have.property 'X', 1
-		cell.should.have.property 'Y', 2
+		cell = new alive.Cell
 
 	it "should start out alive", ->
 		cell.isAlive.should.be.true

@@ -16,7 +16,6 @@ class Cells
 	addCell: (x, y) ->
 
 class Cell
-	constructor: (@X, @Y) ->
 	isAlive: true
 
 	die: () ->
