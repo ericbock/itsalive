@@ -10,12 +10,12 @@ describe "Conway's Game of Life", ->
 
 	describe "when first created", ->
 		it "should have no cells", ->
-			game.should.have.property('cells').with.length 0
+			game.getCells().should.have.length 0
 	
 	it "should add a cell to cells", ->
-		cell = {0, 0}
-		game.addCell(cell)
-		game.cells.should.have.length 1
+		spy = sinon.spy(game._cells, "addCell")
+		game.addCell(0, 0)
+		spy.called.should.be.true
 
 describe "A Cell", ->
 	cell = {}

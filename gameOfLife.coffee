@@ -1,10 +1,19 @@
 root = exports ? this
 
 class Game
-	cells: 
-		length: 0
-	addCell: (cell) ->
-		@cells.length++
+	_cells: {}
+
+	constructor: ->
+		@_cells = new Cells()
+
+	getCells: -> []
+
+	addCell: (x, y) ->
+		@_cells.addCell(x, y)
+
+class Cells
+	length: 0
+	addCell: (x, y) ->
 
 class Cell
 	constructor: (@X, @Y) ->
