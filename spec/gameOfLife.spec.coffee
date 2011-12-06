@@ -17,6 +17,29 @@ describe "Conway's Game of Life", ->
 		game.addCell(0, 0)
 		spy.called.should.be.true
 
+describe "Cells", ->
+	cells = {}
+
+	beforeEach ->
+		cells = new alive.Cells
+	
+	it "should start with no cells", ->
+		cells.getCount().should.equal 0
+	
+	describe "adding a cell", ->
+		it "should increase the count", ->
+			count = cells.getCount()
+			cells.addCell(0, 0)
+			cells.getCount().should.equal count + 1
+
+	describe "get cell", ->
+		it "should return a dead cell if no cell exists at the coordinates", ->
+			cells.getCell(100, 100).isAlive.should.be.false
+
+		it "should return the actual cell at the coordinates if it exists", ->
+			cells.addCell(100, 100)
+			cells.getCell(100, 100).isAlive.should.be.true
+	
 describe "A Cell", ->
 	cell = {}
 
