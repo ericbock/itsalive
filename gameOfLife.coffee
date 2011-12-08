@@ -2,7 +2,7 @@ root = exports ? this
 
 class Game
 	nextGen: (cells) ->
-		cells
+		new Cells
 
 class Cells
 	constructor: ->

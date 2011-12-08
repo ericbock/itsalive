@@ -4,16 +4,28 @@ alive = require '../gameOfLife'
 
 describe "Conway's Game of Life", ->
 	game = {}
+	cells = {}
 
 	beforeEach ->
 		game = new alive.Game
+		cells = new alive.Cells
 
 	describe "next gen", ->
 		it "should return a Cells collection", ->
-			startCells = new alive.Cells
-			endCells = game.nextGen(startCells)
-			should.exist(endCells)
-			endCells.should.be.instanceof alive.Cells
+			newCells = game.nextGen(cells)
+			should.exist(newCells)
+			newCells.should.be.instanceof alive.Cells
+
+		describe "given no live cells", ->
+			it "no live cells should get created", ->
+				newCells = game.nextGen(cells)
+				newCells.getCount().should.equal 0
+
+		describe "given one live cell", ->
+			it "should return an empty collection", ->
+				cells.addCell 0, 0
+				newCells = game.nextGen(cells)
+				newCells.getCount().should.equal 0
 
 describe "Cells", ->
 	cells = {}
