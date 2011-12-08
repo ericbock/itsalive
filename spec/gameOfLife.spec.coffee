@@ -1,5 +1,4 @@
 _ = require('underscore')._
-sinon = require 'sinon'
 should = require 'should'
 alive = require '../gameOfLife'
 
@@ -9,14 +8,12 @@ describe "Conway's Game of Life", ->
 	beforeEach ->
 		game = new alive.Game
 
-	describe "when first created", ->
-		it "should have no cells", ->
-			game.getCells().should.have.length 0
-	
-	it "should add a cell to cells", ->
-		spy = sinon.spy(game._cells, "addCell")
-		game.addCell(0, 0)
-		spy.called.should.be.true
+	describe "next gen", ->
+		it "should return a Cells collection", ->
+			startCells = new alive.Cells
+			endCells = game.nextGen(startCells)
+			should.exist(endCells)
+			endCells.should.be.instanceof alive.Cells
 
 describe "Cells", ->
 	cells = {}

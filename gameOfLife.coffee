@@ -1,13 +1,8 @@
 root = exports ? this
 
 class Game
-	constructor: ->
-		@_cells = new Cells()
-
-	getCells: -> []
-
-	addCell: (x, y) ->
-		@_cells.addCell(x, y)
+	nextGen: (cells) ->
+		cells
 
 class Cells
 	constructor: ->
