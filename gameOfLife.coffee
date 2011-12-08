@@ -28,6 +28,18 @@ class Cells
 			cell.die()
 		cell
 
+	neighborPositions: (x, y) ->
+		[
+			{ x: x - 1, y: y - 1 }
+			{ x: x + 0, y: y - 1 }
+			{ x: x + 1, y: y - 1 }
+			{ x: x - 1, y: y + 0 }
+			{ x: x + 1, y: y + 0 }
+			{ x: x - 1, y: y + 1 }
+			{ x: x + 0, y: y + 1 }
+			{ x: x + 1, y: y + 1 }
+		]
+
 class Cell
 	constructor: ->
 		@isAlive = true
