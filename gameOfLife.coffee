@@ -40,6 +40,11 @@ class Cells
 			{ x: x + 1, y: y + 1 }
 		]
 
+	liveNeighbors: (x, y) ->
+		total = 0
+		total++ for pos in @neighborPositions x, y when @getCell(pos.x, pos.y).isAlive
+		total
+
 class Cell
 	constructor: ->
 		@isAlive = true

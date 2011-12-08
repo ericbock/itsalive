@@ -33,6 +33,11 @@ describe "Cells", ->
 			cells.addCell(0, 0)
 			cells.getCount().should.equal count + 1
 
+		it "should return the new cell", ->
+			cell = cells.addCell(0, 0)
+			should.exist(cell)
+			cell.should.be.an.instanceof alive.Cell
+
 	describe "get cell", ->
 		it "should return a dead cell if no cell exists at the coordinates", ->
 			cells.getCell(100, 100).isAlive.should.be.false
@@ -55,6 +60,14 @@ describe "Cells", ->
 			_.some(positions, (value) -> value.x is 0 and value.y is 2).should.be.true
 			_.some(positions, (value) -> value.x is 1 and value.y is 2).should.be.true
 			_.some(positions, (value) -> value.x is 2 and value.y is 2).should.be.true
+
+	describe "liveNeighbors", ->
+		it "should return a count of the live neighbors", ->
+			cells.addCell(0, 0) # live neighbor
+			cells.addCell(2, 2) # live neighbor
+			cells.addCell(10, 10) # not a neighbor
+			cells.addCell(0, 2).die() # dead neighbor
+			cells.liveNeighbors(1, 1).should.equal 2
 	
 describe "A Cell", ->
 	cell = {}
