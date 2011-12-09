@@ -3,10 +3,8 @@ root = exports ? this
 class Game
 	nextGen: (cells) ->
 		next = new Cells
-		positions = cells.cellPositions()
-		for pos in positions
-			if pos.cell.willLive(pos.liveNeighbors)
-				next.addCell pos.x, pos.y
+		for {x, y, cell, liveNeighbors} in cells.cellPositions()
+			next.addCell x, y if cell.willLive(liveNeighbors)
 		next
 
 class Cells
@@ -19,14 +17,13 @@ class Cells
 		total
 
 	addCell: (x, y) ->
-		cell = new Cell
-		@_cells["#{x},#{y}"] = cell
-		for pos in @neighborPositions x, y when not @_cells["#{pos.x},#{pos.y}"]?
-			@_cells["#{pos.x},#{pos.y}"] = (new Cell).die()
-		cell
+		for point in @neighborPositions x, y when not @_cells[point]?
+			@_cells[point] = Cell.deadCell()
+
+		@_cells[new Point x, y] = new Cell
 
 	getCell: (x, y) ->
-		@_cells["#{x},#{y}"] ? (new Cell).die()
+		@_cells[new Point x, y] ? Cell.deadCell()
 
 	cellPositions: ->
 		for own key, cell of @_cells
@@ -35,14 +32,14 @@ class Cells
 
 	neighborPositions: (x, y) ->
 		[
-			{ x: x - 1, y: y - 1 }
-			{ x: x + 0, y: y - 1 }
-			{ x: x + 1, y: y - 1 }
-			{ x: x - 1, y: y + 0 }
-			{ x: x + 1, y: y + 0 }
-			{ x: x - 1, y: y + 1 }
-			{ x: x + 0, y: y + 1 }
-			{ x: x + 1, y: y + 1 }
+			new Point x - 1, y - 1
+			new Point x + 0, y - 1
+			new Point x + 1, y - 1
+			new Point x - 1, y + 0
+			new Point x + 1, y + 0
+			new Point x - 1, y + 1
+			new Point x + 0, y + 1
+			new Point x + 1, y + 1
 		]
 
 	liveNeighbors: (x, y) ->
@@ -51,6 +48,9 @@ class Cells
 		total
 
 class Cell
+	@deadCell: ->
+		new Cell().die()
+
 	constructor: ->
 		@isAlive = true
 
@@ -64,6 +64,10 @@ class Cell
 
 	willLive: (neighbors) ->
 		if @isAlive then neighbors in [2, 3] else neighbors is 3
+
+class Point
+	constructor: (@x, @y) ->
+	toString: () -> "#{@x},#{@y}"
 
 root.Game = Game
 root.Cells = Cells
