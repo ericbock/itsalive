@@ -2,26 +2,36 @@ root = exports ? this
 
 class Game
 	nextGen: (cells) ->
-		new Cells
+		next = new Cells
+		positions = cells.cellPositions()
+		for pos in positions
+			if pos.cell.willLive(pos.liveNeighbors)
+				next.addCell pos.x, pos.y
+		next
 
 class Cells
 	constructor: ->
 		@_cells = {}
 
-	getCount: -> 
+	getLiveCount: -> 
 		total = 0
-		for own key of @_cells then total++
+		total++ for own key of @_cells when @_cells[key].isAlive
 		total
 
 	addCell: (x, y) ->
-		@_cells["#{x},#{y}"] = new Cell
+		cell = new Cell
+		@_cells["#{x},#{y}"] = cell
+		for pos in @neighborPositions x, y when not @_cells["#{pos.x},#{pos.y}"]?
+			@_cells["#{pos.x},#{pos.y}"] = (new Cell).die()
+		cell
 
 	getCell: (x, y) ->
-		cell = @_cells["#{x},#{y}"]
-		if not cell
-			cell = new Cell
-			cell.die()
-		cell
+		@_cells["#{x},#{y}"] ? (new Cell).die()
+
+	cellPositions: ->
+		for own key, cell of @_cells
+			[x, y] = key.split(',')
+			{x: +x, y: +y, cell: cell, liveNeighbors: @liveNeighbors(+x, +y)}
 
 	neighborPositions: (x, y) ->
 		[
@@ -46,9 +56,11 @@ class Cell
 
 	die: () ->
 		@isAlive = false
+		@
 
 	live: () ->
 		@isAlive = true
+		@
 
 	willLive: (neighbors) ->
 		if @isAlive then neighbors in [2, 3] else neighbors is 3
