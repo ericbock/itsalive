@@ -23,34 +23,34 @@ describe "Conway's Game of Life", ->
 
 		describe "given one live cell", ->
 			it "should return an empty collection", ->
-				cells.addCell 0, 0
+				cells.addCell new alive.Point 0, 0
 				newCells = game.nextGen(cells)
 				newCells.getLiveCount().should.equal 0
 
 		describe "given a 2x2 square", ->
 			it "should return the same 2x2 square", ->
-				cells.addCell 0, 0
-				cells.addCell 0, 1
-				cells.addCell 1, 0
-				cells.addCell 1, 1
+				cells.addCell new alive.Point 0, 0
+				cells.addCell new alive.Point 0, 1
+				cells.addCell new alive.Point 1, 0
+				cells.addCell new alive.Point 1, 1
 				newCells = game.nextGen(cells)
 				newCells.getLiveCount().should.equal 4
 				#ugh
-				newCells.getCell(0, 0).isAlive.should.be.true
-				newCells.getCell(0, 1).isAlive.should.be.true
-				newCells.getCell(1, 0).isAlive.should.be.true
-				newCells.getCell(1, 1).isAlive.should.be.true
+				newCells.getCell(new alive.Point 0, 0).isAlive.should.be.true
+				newCells.getCell(new alive.Point 0, 1).isAlive.should.be.true
+				newCells.getCell(new alive.Point 1, 0).isAlive.should.be.true
+				newCells.getCell(new alive.Point 1, 1).isAlive.should.be.true
 
 		describe "given a 1x3 column", ->
 			it "should return a 3x1 row with the same center", ->
-				cells.addCell 1, 1
-				cells.addCell 1, 2
-				cells.addCell 1, 3
+				cells.addCell new alive.Point 1, 1
+				cells.addCell new alive.Point 1, 2
+				cells.addCell new alive.Point 1, 3
 				newCells = game.nextGen(cells)
 				newCells.getLiveCount().should.equal 3
-				newCells.getCell(0, 2).isAlive.should.be.true
-				newCells.getCell(1, 2).isAlive.should.be.true
-				newCells.getCell(2, 2).isAlive.should.be.true
+				newCells.getCell(new alive.Point 0, 2).isAlive.should.be.true
+				newCells.getCell(new alive.Point 1, 2).isAlive.should.be.true
+				newCells.getCell(new alive.Point 2, 2).isAlive.should.be.true
 
 describe "Cells", ->
 	cells = {}
@@ -64,29 +64,29 @@ describe "Cells", ->
 	describe "adding a cell", ->
 		it "should increase the count", ->
 			count = cells.getLiveCount()
-			cells.addCell(0, 0)
+			cells.addCell new alive.Point 0, 0
 			cells.getLiveCount().should.be.greaterThan count
 
 		it "should return the new cell", ->
-			cell = cells.addCell(0, 0)
+			cell = cells.addCell new alive.Point 0, 0
 			should.exist(cell)
 			cell.should.be.an.instanceof alive.Cell
 
 	describe "get cell", ->
 		it "should return a dead cell if no cell exists at the coordinates", ->
-			cells.getCell(100, 100).isAlive.should.be.false
+			cells.getCell(new alive.Point 100, 100).isAlive.should.be.false
 
 		it "should return the actual cell at the coordinates if it exists", ->
-			cells.addCell(100, 100)
-			cells.getCell(100, 100).isAlive.should.be.true
+			cells.addCell new alive.Point 100, 100
+			cells.getCell(new alive.Point 100, 100).isAlive.should.be.true
 	
 	describe "liveNeighbors", ->
 		it "should return a count of the live neighbors", ->
-			cells.addCell(0, 0) # live neighbor
-			cells.addCell(2, 2) # live neighbor
-			cells.addCell(10, 10) # not a neighbor
-			cells.addCell(0, 2).die() # dead neighbor
-			cells.liveNeighbors(1, 1).should.equal 2
+			cells.addCell new alive.Point 0, 0 # live neighbor
+			cells.addCell new alive.Point 2, 2 # live neighbor
+			cells.addCell new alive.Point 10, 10 # not a neighbor
+			cells.addCell(new alive.Point 0, 2).die() # dead neighbor
+			cells.liveNeighbors(new alive.Point 1, 1).should.equal 2
 	
 describe "A Cell", ->
 	cell = {}

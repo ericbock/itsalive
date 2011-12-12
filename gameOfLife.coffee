@@ -3,8 +3,8 @@ root = exports ? this
 class Game
 	nextGen: (cells) ->
 		next = new Cells
-		for {x, y, cell, liveNeighbors} in cells.cellPositions()
-			next.addCell x, y if cell.willLive(liveNeighbors)
+		for {point, cell, liveNeighbors} in cells.cellPositions()
+			next.addCell point if cell.willLive(liveNeighbors)
 		next
 
 class Cells
@@ -16,23 +16,24 @@ class Cells
 		total++ for own key of @_cells when @_cells[key].isAlive
 		total
 
-	addCell: (x, y) ->
-		for point in new Point(x, y).neighborPositions() when not @_cells[point]?
-			@_cells[point] = Cell.deadCell()
+	addCell: (point) ->
+		for neighbor in point.neighborPositions() when not @_cells[neighbor]?
+			@_cells[neighbor] = Cell.deadCell()
 
-		@_cells[new Point x, y] = new Cell
+		@_cells[point] = new Cell
 
-	getCell: (x, y) ->
-		@_cells[new Point x, y] ? Cell.deadCell()
+	getCell: (point) ->
+		@_cells[point] ? Cell.deadCell()
 
 	cellPositions: ->
 		for own key, cell of @_cells
 			[x, y] = key.split(',')
-			{x: +x, y: +y, cell: cell, liveNeighbors: @liveNeighbors(+x, +y)}
+			point = new Point +x, +y
+			{point: point, cell: cell, liveNeighbors: @liveNeighbors(point)}
 
-	liveNeighbors: (x, y) ->
+	liveNeighbors: (point) ->
 		total = 0
-		total++ for pos in new Point(x, y).neighborPositions() when @getCell(pos.x, pos.y).isAlive
+		total++ for neighbor in point.neighborPositions() when @getCell(neighbor).isAlive
 		total
 
 class Cell
