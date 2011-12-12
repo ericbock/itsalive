@@ -3,8 +3,7 @@ root = exports ? this
 class Game
 	nextGen: (cells) ->
 		next = new Cells
-		for {point, cell, liveNeighbors} in cells.cellPositions()
-			next.addCell point if cell.willLive(liveNeighbors)
+		next.addCell point for {point, willLive} in cells.outlook() when willLive
 		next
 
 class Cells
@@ -23,11 +22,12 @@ class Cells
 	getCell: (point) ->
 		@_cells[point] ? Cell.deadCell()
 
-	cellPositions: ->
+	outlook: ->
 		for own key, cell of @_cells
-			[x, y] = key.split(',')
-			point = new Point +x, +y
-			{point: point, cell: cell, liveNeighbors: @liveNeighbors(point)}
+			coords = (+coord for coord in key.split ',')
+			point = new Point coords...
+			willLive = cell.willLive @liveNeighbors(point)
+			{point: point, willLive: willLive}
 
 	liveNeighbors: (point) ->
 		total = 0
