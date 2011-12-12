@@ -17,7 +17,7 @@ class Cells
 		total
 
 	addCell: (point) ->
-		for neighbor in point.neighborPositions() when not @_cells[neighbor]?
+		for neighbor in point.neighbors() when not @_cells[neighbor]?
 			@_cells[neighbor] = Cell.deadCell()
 
 		@_cells[point] = new Cell
@@ -33,7 +33,7 @@ class Cells
 
 	liveNeighbors: (point) ->
 		total = 0
-		total++ for neighbor in point.neighborPositions() when @getCell(neighbor).isAlive
+		total++ for neighbor in point.neighbors() when @getCell(neighbor).isAlive
 		total
 
 class Cell
@@ -58,7 +58,7 @@ class Point
 	constructor: (@x, @y) ->
 	toString: () -> "#{@x},#{@y}"
 
-	neighborPositions: () ->
+	neighbors: () ->
 		[
 			new Point @x - 1, @y - 1
 			new Point @x + 0, @y - 1

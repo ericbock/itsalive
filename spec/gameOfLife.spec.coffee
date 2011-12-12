@@ -137,10 +137,10 @@ describe "A Cell", ->
 				cell.willLive(i).should.be.false for i in [0..2].concat([4..8])
 
 describe "A point", ->
-	describe "neighborPositions", ->
+	describe "neighbors", ->
 		it "should return the positions of the neighbors surrounding a cell", ->
 			x = y = 1
-			positions = new alive.Point(x, y).neighborPositions()
+			positions = new alive.Point(x, y).neighbors()
 			positions.should.have.length 8
 			#ugh
 			_.some(positions, (value) -> value.x is 0 and value.y is 0).should.be.true
