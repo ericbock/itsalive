@@ -80,21 +80,6 @@ describe "Cells", ->
 			cells.addCell(100, 100)
 			cells.getCell(100, 100).isAlive.should.be.true
 	
-	describe "neighborPositions", ->
-		it "should return the positions of the neighbors surrounding a cell", ->
-			x = y = 1
-			positions = cells.neighborPositions(x, y)
-			positions.should.have.length 8
-			#ugh
-			_.some(positions, (value) -> value.x is 0 and value.y is 0).should.be.true
-			_.some(positions, (value) -> value.x is 1 and value.y is 0).should.be.true
-			_.some(positions, (value) -> value.x is 2 and value.y is 0).should.be.true
-			_.some(positions, (value) -> value.x is 0 and value.y is 1).should.be.true
-			_.some(positions, (value) -> value.x is 2 and value.y is 1).should.be.true
-			_.some(positions, (value) -> value.x is 0 and value.y is 2).should.be.true
-			_.some(positions, (value) -> value.x is 1 and value.y is 2).should.be.true
-			_.some(positions, (value) -> value.x is 2 and value.y is 2).should.be.true
-
 	describe "liveNeighbors", ->
 		it "should return a count of the live neighbors", ->
 			cells.addCell(0, 0) # live neighbor
@@ -150,3 +135,19 @@ describe "A Cell", ->
 		describe "with some number of neighbors other than three", ->
 			it "will stay dead", ->
 				cell.willLive(i).should.be.false for i in [0..2].concat([4..8])
+
+describe "A point", ->
+	describe "neighborPositions", ->
+		it "should return the positions of the neighbors surrounding a cell", ->
+			x = y = 1
+			positions = new alive.Point(x, y).neighborPositions()
+			positions.should.have.length 8
+			#ugh
+			_.some(positions, (value) -> value.x is 0 and value.y is 0).should.be.true
+			_.some(positions, (value) -> value.x is 1 and value.y is 0).should.be.true
+			_.some(positions, (value) -> value.x is 2 and value.y is 0).should.be.true
+			_.some(positions, (value) -> value.x is 0 and value.y is 1).should.be.true
+			_.some(positions, (value) -> value.x is 2 and value.y is 1).should.be.true
+			_.some(positions, (value) -> value.x is 0 and value.y is 2).should.be.true
+			_.some(positions, (value) -> value.x is 1 and value.y is 2).should.be.true
+			_.some(positions, (value) -> value.x is 2 and value.y is 2).should.be.true

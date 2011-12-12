@@ -17,7 +17,7 @@ class Cells
 		total
 
 	addCell: (x, y) ->
-		for point in @neighborPositions x, y when not @_cells[point]?
+		for point in new Point(x, y).neighborPositions() when not @_cells[point]?
 			@_cells[point] = Cell.deadCell()
 
 		@_cells[new Point x, y] = new Cell
@@ -30,21 +30,9 @@ class Cells
 			[x, y] = key.split(',')
 			{x: +x, y: +y, cell: cell, liveNeighbors: @liveNeighbors(+x, +y)}
 
-	neighborPositions: (x, y) ->
-		[
-			new Point x - 1, y - 1
-			new Point x + 0, y - 1
-			new Point x + 1, y - 1
-			new Point x - 1, y + 0
-			new Point x + 1, y + 0
-			new Point x - 1, y + 1
-			new Point x + 0, y + 1
-			new Point x + 1, y + 1
-		]
-
 	liveNeighbors: (x, y) ->
 		total = 0
-		total++ for pos in @neighborPositions x, y when @getCell(pos.x, pos.y).isAlive
+		total++ for pos in new Point(x, y).neighborPositions() when @getCell(pos.x, pos.y).isAlive
 		total
 
 class Cell
@@ -69,6 +57,20 @@ class Point
 	constructor: (@x, @y) ->
 	toString: () -> "#{@x},#{@y}"
 
+	neighborPositions: () ->
+		[
+			new Point @x - 1, @y - 1
+			new Point @x + 0, @y - 1
+			new Point @x + 1, @y - 1
+			new Point @x - 1, @y + 0
+			new Point @x + 1, @y + 0
+			new Point @x - 1, @y + 1
+			new Point @x + 0, @y + 1
+			new Point @x + 1, @y + 1
+		]
+
+
 root.Game = Game
 root.Cells = Cells
 root.Cell = Cell
+root.Point = Point
