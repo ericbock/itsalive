@@ -17,9 +17,7 @@ class Cells
 		total
 
 	addCell: (point) ->
-		for neighbor in point.neighbors() when not @_cells[neighbor]?
-			@_cells[neighbor] = Cell.deadCell()
-
+		@_initNeighbors point
 		@_cells[point] = new Cell
 
 	getCell: (point) ->
@@ -35,6 +33,10 @@ class Cells
 		total = 0
 		total++ for neighbor in point.neighbors() when @getCell(neighbor).isAlive
 		total
+
+	_initNeighbors: (point) ->
+		for neighbor in point.neighbors() when not @_cells[neighbor]?
+			@_cells[neighbor] = Cell.deadCell()
 
 class Cell
 	@deadCell: ->
