@@ -3,7 +3,7 @@ root = exports ? this
 class Game
 	nextGen: (cells) ->
 		next = new Cells
-		next.addCell point for {point, willLive} in cells.outlook() when willLive
+		next.addCell cell.coords() for {cell, willLive} in cells.outlook() when willLive
 		next
 
 class Cells
@@ -12,31 +12,32 @@ class Cells
 
 	getLiveCount: -> 
 		total = 0
-		total++ for own key of @_cells when @_cells[key].isAlive
+		total++ for own key, cell of @_cells when cell.isAlive
 		total
 
-	addCell: (point) ->
-		@_initNeighbors point
-		@_cells[point] = new Cell
+	addCell: (coords...) ->
+		cell = new Cell().at coords...
+		@_initNeighbors cell
+		@_cells[coords] = cell
 
-	getCell: (point) ->
-		@_cells[point] ? Cell.deadCell()
+	getCell: (coords...) ->
+		@_cells[coords] ? Cell.deadCell().at coords...
 
 	outlook: ->
 		for own key, cell of @_cells
-			coords = (+coord for coord in key.split ',')
-			point = new Point coords...
-			willLive = cell.willLive @liveNeighbors(point)
-			{point: point, willLive: willLive}
+			{
+				cell: cell
+				willLive: cell.willLive(@liveNeighbors cell)
+			}
 
-	liveNeighbors: (point) ->
+	liveNeighbors: (cell) ->
 		total = 0
-		total++ for neighbor in point.neighbors() when @getCell(neighbor).isAlive
+		total++ for coords in cell.neighbors() when @getCell(coords).isAlive
 		total
 
-	_initNeighbors: (point) ->
-		for neighbor in point.neighbors() when not @_cells[neighbor]?
-			@_cells[neighbor] = Cell.deadCell()
+	_initNeighbors: (cell) ->
+		for coords in cell.neighbors() when not @_cells[coords]?
+			@_cells[coords] = Cell.deadCell().at coords...
 
 class Cell
 	@deadCell: ->
@@ -56,24 +57,28 @@ class Cell
 	willLive: (neighbors) ->
 		if @isAlive then neighbors in [2, 3] else neighbors is 3
 
-class Point
-	constructor: (@x, @y) ->
-	toString: () -> "#{@x},#{@y}"
+# point logic as mixin
+asPoint = () ->
+	@at = (@x, @y) -> @
+	
+	@coords = () -> [@x, @y]
 
-	neighbors: () ->
+	@neighbors = () ->
 		[
-			new Point @x - 1, @y - 1
-			new Point @x + 0, @y - 1
-			new Point @x + 1, @y - 1
-			new Point @x - 1, @y + 0
-			new Point @x + 1, @y + 0
-			new Point @x - 1, @y + 1
-			new Point @x + 0, @y + 1
-			new Point @x + 1, @y + 1
+			[@x - 1, @y - 1]
+			[@x + 0, @y - 1]
+			[@x + 1, @y - 1]
+			[@x - 1, @y + 0]
+			[@x + 1, @y + 0]
+			[@x - 1, @y + 1]
+			[@x + 0, @y + 1]
+			[@x + 1, @y + 1]
 		]
 
+	@
+
+asPoint.call Cell::
 
 root.Game = Game
 root.Cells = Cells
 root.Cell = Cell
-root.Point = Point
