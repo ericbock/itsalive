@@ -71,8 +71,8 @@ describe "Cells", ->
 			cell.should.be.an.instanceof Cell
 
 	describe "get cell", ->
-		it "should return a dead cell if no cell exists at the coordinates", ->
-			cells.getCell(100, 100).isAlive.should.be.false
+		it "should return undefined if no cell exists at the coordinates", ->
+			should.not.exist cells.getCell(100, 100)
 
 		it "should return the actual cell at the coordinates if it exists", ->
 			cells.addCell 100, 100
