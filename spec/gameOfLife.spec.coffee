@@ -1,30 +1,28 @@
 { _ } = require('underscore')
 should = require 'should'
-{ Game, Cells, Cell, Point } = require '../gameOfLife'
+{ gameStep, Cells, Cell } = require '../gameOfLife'
 
 describe "Conway's Game of Life", ->
-	game = {}
 	cells = {}
 
 	beforeEach ->
-		game = new Game
 		cells = new Cells
 
-	describe "next gen", ->
+	describe "gameStep", ->
 		it "should return a Cells collection", ->
-			newCells = game.nextGen(cells)
+			newCells = gameStep(cells)
 			should.exist(newCells)
 			newCells.should.be.instanceof Cells
 
 		describe "given no live cells", ->
 			it "no live cells should get created", ->
-				newCells = game.nextGen(cells)
+				newCells = gameStep(cells)
 				newCells.getLiveCount().should.equal 0
 
 		describe "given one live cell", ->
 			it "should return an empty collection", ->
 				cells.addCell 0, 0
-				newCells = game.nextGen(cells)
+				newCells = gameStep(cells)
 				newCells.getLiveCount().should.equal 0
 
 		describe "given a 2x2 square", ->
@@ -33,7 +31,7 @@ describe "Conway's Game of Life", ->
 				cells.addCell 0, 1
 				cells.addCell 1, 0
 				cells.addCell 1, 1
-				newCells = game.nextGen(cells)
+				newCells = gameStep(cells)
 				newCells.getLiveCount().should.equal 4
 				#ugh
 				newCells.getCell(0, 0).isAlive.should.be.true
@@ -46,7 +44,7 @@ describe "Conway's Game of Life", ->
 				cells.addCell 1, 1
 				cells.addCell 1, 2
 				cells.addCell 1, 3
-				newCells = game.nextGen(cells)
+				newCells = gameStep(cells)
 				newCells.getLiveCount().should.equal 3
 				newCells.getCell(0, 2).isAlive.should.be.true
 				newCells.getCell(1, 2).isAlive.should.be.true

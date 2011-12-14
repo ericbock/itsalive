@@ -1,10 +1,9 @@
 root = exports ? this
 
-class Game
-	nextGen: (cells) ->
-		next = new Cells
-		next.addCell cell.coords() for {cell, willLive} in cells.outlook() when willLive
-		next
+gameStep = (cells) ->
+	next = new Cells
+	next.addCell cell.coords() for {cell, willLive} in cells.outlook() when willLive
+	next
 
 class Cells
 	constructor: ->
@@ -79,6 +78,6 @@ asPoint = () ->
 
 asPoint.call Cell::
 
-root.Game = Game
+root.gameStep = gameStep
 root.Cells = Cells
 root.Cell = Cell
