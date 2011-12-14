@@ -6,13 +6,7 @@ gameStep = (cells) ->
 	next
 
 class Cells
-	constructor: ->
-		@_cells = {}
-
-	getLiveCount: -> 
-		total = 0
-		total++ for own key, cell of @_cells when cell.isAlive
-		total
+	constructor: -> @_cells = {}
 
 	addCell: (coords...) ->
 		cell = new Cell().at coords...
@@ -29,21 +23,20 @@ class Cells
 				willLive: cell.willLive(@liveNeighbors cell)
 			}
 
+	getLiveCount: -> 
+		(cell for own key, cell of @_cells when cell.isAlive).length
+
 	liveNeighbors: (cell) ->
-		total = 0
-		total++ for coords in cell.neighbors() when @getCell(coords).isAlive
-		total
+		(coords for coords in cell.neighbors() when @getCell(coords).isAlive).length
 
 	_initNeighbors: (cell) ->
 		for coords in cell.neighbors() when not @_cells[coords]?
 			@_cells[coords] = Cell.deadCell().at coords...
 
 class Cell
-	@deadCell: ->
-		new Cell().die()
+	@deadCell: -> new Cell().die()
 
-	constructor: ->
-		@isAlive = true
+	constructor: -> @isAlive = true
 
 	die: () ->
 		@isAlive = false
@@ -64,17 +57,12 @@ asPoint = () ->
 
 	@neighbors = () ->
 		[
-			[@x - 1, @y - 1]
-			[@x + 0, @y - 1]
-			[@x + 1, @y - 1]
-			[@x - 1, @y + 0]
-			[@x + 1, @y + 0]
-			[@x - 1, @y + 1]
-			[@x + 0, @y + 1]
-			[@x + 1, @y + 1]
+			[@x - 1, @y - 1], [@x + 0, @y - 1], [@x + 1, @y - 1]
+			[@x - 1, @y + 0],                   [@x + 1, @y + 0]
+			[@x - 1, @y + 1], [@x + 0, @y + 1], [@x + 1, @y + 1]
 		]
 
-	@
+	return @
 
 asPoint.call Cell::
 
