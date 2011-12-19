@@ -2,7 +2,7 @@ root = exports ? this
 
 gameStep = (cells) ->
 	next = new Cells
-	next.addCell cell.coords() for {cell, willLive} in cells.outlook() when willLive
+	next.addCell cell.coords()... for {cell, willLive} in cells.outlook() when willLive
 	next
 
 class Cells
