@@ -39,31 +39,52 @@ describe "Conway's Game of Life", ->
 				newCells = gameStep(cells)
 				shouldMatch newCells, [ 0 ]
 
-		describe "given a 2x2 square", ->
-			it "should return the same 2x2 square", ->
+		describe "block", ->
+			beforeEach ->
 				given cells, [
 					[1, 1]
 					[1, 1]
 				]
+
+			it "should return the same block", ->
 				newCells = gameStep(cells)
 				shouldMatch newCells, [
 					[1, 1]
 					[1, 1]
 				]
 
-		describe "given a 1x3 column", ->
-			it "should return a 3x1 row with the same center", ->
-				given cells, [
-					[0, 1, 0]
-					[0, 1, 0]
-					[0, 1, 0]
-				]
-				newCells = gameStep(cells)
-				shouldMatch newCells, [
-					[0, 0, 0]
-					[1, 1, 1]
-					[0, 0, 0]
-				]
+		describe "blinker", ->
+			describe "in period 1", ->
+				beforeEach ->
+					given cells, [
+						[0, 1, 0]
+						[0, 1, 0]
+						[0, 1, 0]
+					]
+
+				it "should rotate", ->
+					newCells = gameStep(cells)
+					shouldMatch newCells, [
+						[0, 0, 0]
+						[1, 1, 1]
+						[0, 0, 0]
+					]
+			
+			describe "in period 2", ->
+				beforeEach ->
+					given cells, [
+						[0, 0, 0]
+						[1, 1, 1]
+						[0, 0, 0]
+					]
+
+				it "should rotate", ->
+					newCells = gameStep(cells)
+					shouldMatch newCells, [
+						[0, 1, 0]
+						[0, 1, 0]
+						[0, 1, 0]
+					]
 
 describe "Cells", ->
 	cells = {}
