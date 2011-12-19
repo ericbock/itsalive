@@ -2,14 +2,21 @@
 should = require 'should'
 { gameStep, Cells, Cell } = require '../gameOfLife'
 
-given = (cells, locations) ->
-	for row, y in locations
-		for col, x in row when col is 1
-			cells.addCell x, y
-	cells
-
 describe "Conway's Game of Life", ->
 	cells = {}
+
+	given = (cells, locations) ->
+		for row, y in locations
+			for col, x in row when col is 1
+				cells.addCell x, y
+		cells
+
+	shouldMatch = (cells, locations) ->
+		for row, y in locations
+			for col, x in row
+				expectedAlive = col is 1
+				cells.getCell(x, y).isAlive.should.equal expectedAlive
+		cells
 
 	beforeEach ->
 		cells = new Cells
@@ -22,14 +29,15 @@ describe "Conway's Game of Life", ->
 
 		describe "given no live cells", ->
 			it "no live cells should get created", ->
+				given cells, [ 0 ]
 				newCells = gameStep(cells)
-				newCells.getLiveCount().should.equal 0
+				shouldMatch newCells, [ 0 ]
 
 		describe "given one live cell", ->
 			it "should return an empty collection", ->
 				given cells, [ [1] ]
 				newCells = gameStep(cells)
-				newCells.getLiveCount().should.equal 0
+				shouldMatch newCells, [ 0 ]
 
 		describe "given a 2x2 square", ->
 			it "should return the same 2x2 square", ->
@@ -38,12 +46,10 @@ describe "Conway's Game of Life", ->
 					[1, 1]
 				]
 				newCells = gameStep(cells)
-				newCells.getLiveCount().should.equal 4
-				#ugh
-				newCells.getCell(0, 0).isAlive.should.be.true
-				newCells.getCell(0, 1).isAlive.should.be.true
-				newCells.getCell(1, 0).isAlive.should.be.true
-				newCells.getCell(1, 1).isAlive.should.be.true
+				shouldMatch newCells, [
+					[1, 1]
+					[1, 1]
+				]
 
 		describe "given a 1x3 column", ->
 			it "should return a 3x1 row with the same center", ->
@@ -53,10 +59,11 @@ describe "Conway's Game of Life", ->
 					[0, 1, 0]
 				]
 				newCells = gameStep(cells)
-				newCells.getLiveCount().should.equal 3
-				newCells.getCell(0, 1).isAlive.should.be.true
-				newCells.getCell(1, 1).isAlive.should.be.true
-				newCells.getCell(2, 1).isAlive.should.be.true
+				shouldMatch newCells, [
+					[0, 0, 0]
+					[1, 1, 1]
+					[0, 0, 0]
+				]
 
 describe "Cells", ->
 	cells = {}
