@@ -5,18 +5,22 @@ should = require 'should'
 describe "Conway's Game of Life", ->
 	cells = {}
 
-	given = (cells, locations) ->
+	given = (locations) ->
 		for row, y in locations
 			for col, x in row when col is 1
-				cells.addCell x, y
-		cells
+				@addCell x, y
+		return @
 
-	shouldMatch = (cells, locations) ->
+	shouldBecome = (locations) ->
+		newCells = gameStep @
 		for row, y in locations
 			for col, x in row
 				expectedAlive = col is 1
-				cells.getCell(x, y).isAlive.should.equal expectedAlive
-		cells
+				newCells.getCell(x, y).isAlive.should.equal expectedAlive
+		newCells
+
+	Cells::given = given
+	Cells::shouldBecome = shouldBecome
 
 	beforeEach ->
 		cells = new Cells
@@ -29,26 +33,23 @@ describe "Conway's Game of Life", ->
 
 		describe "given no live cells", ->
 			it "no live cells should get created", ->
-				given cells, [ 0 ]
-				newCells = gameStep(cells)
-				shouldMatch newCells, [ 0 ]
+				cells.given [ 0 ]
+				cells.shouldBecome [ 0 ]
 
 		describe "given one live cell", ->
 			it "should return an empty collection", ->
-				given cells, [ [1] ]
-				newCells = gameStep(cells)
-				shouldMatch newCells, [ 0 ]
+				cells.given [ 1 ]
+				cells.shouldBecome [ 0 ]
 
 		describe "block", ->
 			beforeEach ->
-				given cells, [
+				cells.given [
 					[1, 1]
 					[1, 1]
 				]
 
 			it "should return the same block", ->
-				newCells = gameStep(cells)
-				shouldMatch newCells, [
+				cells.shouldBecome [
 					[1, 1]
 					[1, 1]
 				]
@@ -56,15 +57,14 @@ describe "Conway's Game of Life", ->
 		describe "blinker", ->
 			describe "in period 1", ->
 				beforeEach ->
-					given cells, [
+					cells.given [
 						[0, 1, 0]
 						[0, 1, 0]
 						[0, 1, 0]
 					]
 
 				it "should rotate", ->
-					newCells = gameStep(cells)
-					shouldMatch newCells, [
+					cells.shouldBecome [
 						[0, 0, 0]
 						[1, 1, 1]
 						[0, 0, 0]
@@ -72,15 +72,14 @@ describe "Conway's Game of Life", ->
 			
 			describe "in period 2", ->
 				beforeEach ->
-					given cells, [
+					cells.given [
 						[0, 0, 0]
 						[1, 1, 1]
 						[0, 0, 0]
 					]
 
 				it "should rotate", ->
-					newCells = gameStep(cells)
-					shouldMatch newCells, [
+					cells.shouldBecome [
 						[0, 1, 0]
 						[0, 1, 0]
 						[0, 1, 0]
