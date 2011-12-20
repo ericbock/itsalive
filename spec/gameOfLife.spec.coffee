@@ -71,6 +71,40 @@ describe "Conway's Game of Life", ->
 					]
 				)
 
+		describe "glider", ->
+			it "moves", ->
+				cells.followSequence(
+					[
+						[0, 1, 0]
+						[0, 0, 1]
+						[1, 1, 1]
+					]
+					[
+						[0, 0, 0]
+						[1, 0, 1]
+						[0, 1, 1]
+						[0, 1, 0]
+					]
+					[
+						[0, 0, 0]
+						[0, 0, 1]
+						[1, 0, 1]
+						[0, 1, 1]
+					]
+					[
+						[0, 0, 0, 0]
+						[0, 1, 0, 0]
+						[0, 0, 1, 1]
+						[0, 1, 1, 0]
+					]
+					[
+						[0, 0, 0, 0]
+						[0, 0, 1, 0]
+						[0, 0, 0, 1]
+						[0, 1, 1, 1]
+					]
+				)
+
 	given = (locations) ->
 		for row, y in locations
 			for col, x in row when col is 1
