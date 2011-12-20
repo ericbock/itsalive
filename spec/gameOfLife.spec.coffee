@@ -5,23 +5,6 @@ should = require 'should'
 describe "Conway's Game of Life", ->
 	cells = {}
 
-	given = (locations) ->
-		for row, y in locations
-			for col, x in row when col is 1
-				@addCell x, y
-		return @
-
-	shouldBecome = (locations) ->
-		newCells = gameStep @
-		for row, y in locations
-			for col, x in row
-				expectedAlive = col is 1
-				newCells.getCell(x, y).isAlive.should.equal expectedAlive
-		newCells
-
-	Cells::given = given
-	Cells::shouldBecome = shouldBecome
-
 	beforeEach ->
 		cells = new Cells
 
@@ -33,57 +16,85 @@ describe "Conway's Game of Life", ->
 
 		describe "given no live cells", ->
 			it "no live cells should get created", ->
-				cells.given [ 0 ]
-				cells.shouldBecome [ 0 ]
+				cells.followSequence(
+					[
+						[ 0 ]
+					]
+					[
+						[ 0 ]
+					]
+				)
 
 		describe "given one live cell", ->
 			it "should return an empty collection", ->
-				cells.given [ 1 ]
-				cells.shouldBecome [ 0 ]
+				cells.followSequence(
+					[
+						[ 1 ]
+					]
+					[
+						[ 0 ]
+					]
+				)
 
 		describe "block", ->
-			beforeEach ->
-				cells.given [
-					[1, 1]
-					[1, 1]
-				]
 
 			it "should return the same block", ->
-				cells.shouldBecome [
-					[1, 1]
-					[1, 1]
-				]
+				cells.followSequence( 
+					[
+						[1, 1]
+						[1, 1]
+					]
+					[
+						[1, 1]
+						[1, 1]
+					]
+				)
 
 		describe "blinker", ->
-			describe "in period 1", ->
-				beforeEach ->
-					cells.given [
+
+			it "rotates", ->
+				cells.followSequence( 
+					[
 						[0, 1, 0]
 						[0, 1, 0]
 						[0, 1, 0]
 					]
-
-				it "should rotate", ->
-					cells.shouldBecome [
+					[
 						[0, 0, 0]
 						[1, 1, 1]
 						[0, 0, 0]
 					]
-			
-			describe "in period 2", ->
-				beforeEach ->
-					cells.given [
-						[0, 0, 0]
-						[1, 1, 1]
-						[0, 0, 0]
+					[
+						[0, 1, 0]
+						[0, 1, 0]
+						[0, 1, 0]
 					]
+				)
 
-				it "should rotate", ->
-					cells.shouldBecome [
-						[0, 1, 0]
-						[0, 1, 0]
-						[0, 1, 0]
-					]
+	given = (locations) ->
+		for row, y in locations
+			for col, x in row when col is 1
+				@addCell x, y
+		return @
+
+	shouldBecome = (locations) ->
+		newCells = gameStep @
+		for row, y in locations
+			for col, x in row when col is 1
+				newCells.getCell(x, y).isAlive.should.be.true
+			for col, x in row when col isnt 1
+				newCells.getCell(x, y)?.isAlive.should.be.false
+		newCells
+
+	followSequence = (initial, states...) ->
+		current = @.given initial
+		for state in states
+			current = current.shouldBecome state
+		current
+
+	Cells::given = given
+	Cells::shouldBecome = shouldBecome
+	Cells::followSequence = followSequence
 
 describe "Cells", ->
 	cells = {}
