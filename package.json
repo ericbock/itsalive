@@ -1,0 +1,15 @@
+{
+	"name": "itsalive",
+	"description": "crappy Conway's Game of Life implementation",
+	"version": "0.0.1",
+	"main": "index.coffee",
+	"dependencies": {
+		"coffee-script": ">= 1.1.3"
+	},
+	"devDependencies": {
+		"jasmine-node": "*",
+		"should": "*",
+		"underscore": "*"
+	},
+	"private": true
+}

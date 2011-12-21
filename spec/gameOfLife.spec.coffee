@@ -1,6 +1,6 @@
 { _ } = require('underscore')
 should = require 'should'
-{ gameStep, Cells, Cell } = require '../gameOfLife'
+{ gameStep, Cells, Cell } = require '../lib/gameOfLife'
 
 describe "Conway's Game of Life", ->
 	cells = {}
